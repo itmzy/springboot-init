@@ -1,0 +1,24 @@
+-- 创建用户表
+CREATE TABLE IF NOT EXISTS user (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE COMMENT '用户名',
+    password VARCHAR(255) NOT NULL COMMENT '密码',
+    phone_number VARCHAR(20) NOT NULL COMMENT '手机号',
+    role ENUM('ADMIN', 'USER') DEFAULT 'USER' COMMENT '用户角色',
+    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    is_delete TINYINT(1) DEFAULT 0 COMMENT '是否删除标记'
+    );
+
+-- 创建请求日志表
+CREATE TABLE IF NOT EXISTS request_log (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '日志ID',
+    user_id INT COMMENT '用户ID',
+    method VARCHAR(10) NOT NULL COMMENT 'HTTP请求方法',
+    uri VARCHAR(255) NOT NULL COMMENT '请求URI',
+    parameters TEXT COMMENT '请求参数JSON格式',
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '请求时间',
+    details TEXT COMMENT '请求详情（如客户端IP等信息）',
+    status_code INT COMMENT '请求返回状态码',
+    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL
+    );
